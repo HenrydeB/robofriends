@@ -5,6 +5,7 @@ import Scroll from '../Components/Scroll';
 import ErrorBoundry from '../Components/ErrorBoundary';
 import './app.css';
 
+//Program to learn how to use react hooks
 
 function App() {
     const [robots, setRobots] = useState([])
@@ -16,7 +17,7 @@ useEffect(() => {
         .then(response=> response.json())
         .then(users => {setRobots(users)});
         console.log(count)
-}, [count])
+}, [count])//means only run if count changes
 
 const onSearchChange = (event) => {
     setSearchField(event.target.value)

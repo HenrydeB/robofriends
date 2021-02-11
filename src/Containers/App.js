@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cardlist from '../Components/Cardlist';
 import SearchBox from '../Components/SearchBox';
 import Scroll from '../Components/Scroll';
@@ -6,45 +6,34 @@ import ErrorBoundry from '../Components/ErrorBoundary';
 import './app.css';
 
 
+function App() {
+    const [robots, setRobots] = useState([])
+    const [searchfield, setSearchField]=useState('')
+    const [count, setCount] = useState(0)
 
-
-class App extends Component {
-    constructor () {
-        super ()
-        // this is what changes in the app. Virtual DOM is affected by REACT because it
-        // collects this info 
-        this.state = {
-            robots: [],
-            searchfield:''
-        }
-    }
-
-    componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/users')
+useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
         .then(response=> response.json())
-        .then(users => this.setState({ robots: users}));
-    }
-//The search change event is triggered by whatever affects the search field
+        .then(users => {setRobots(users)});
+        console.log(count)
+}, [count])
 
-onSearchChange = (event) => {
-    this.setState({searchfield: event.target.value})
-   
+const onSearchChange = (event) => {
+    setSearchField(event.target.value)
 }
-
 //The search box filters through the robot list with the search change
 //the robots get filtered by whatever is entered in the search field
-
-    render() {
-    const { robots, searchfield } = this.state;
-    const filteredRobots = robots.filter(robots =>{
-        return robots.name.toLowerCase().includes(searchfield.toLowerCase());
-        })
+const filteredRobots = robots.filter(robots =>{ 
+    return robots.name.toLowerCase().includes(searchfield.toLowerCase());
+    })
+        
     return !robots.length ?
          <h1>Loading</h1> :
     ( 
         <div className='tc'>
         <h1 className= 'f1'>Robofriends</h1>
-        <SearchBox searchChange={this.onSearchChange}/>
+        <button onClick={()=>setCount(count+1)}>Click Me!</button>
+        <SearchBox searchChange={onSearchChange}/>
         <Scroll>
         <ErrorBoundry>
          <Cardlist robots={filteredRobots}/>
@@ -52,8 +41,5 @@ onSearchChange = (event) => {
         </Scroll>
     </div>
     );
-     
  }
-}
-
 export default App;
